@@ -1,0 +1,11 @@
+# Ancorado na raiz do repo: NÃO excluir .git (hatch-vcs precisa dele p/ versão, tag v6.19.0)
+# nem src/free_claude_code/assets (ícones servidos pelo /admin).
+/.github
+/assets
+/e2e
+/tests
+/smoke
+__pycache__
+*.pyc
+.env
+.venv

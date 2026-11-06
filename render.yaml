@@ -1,0 +1,32 @@
+# Render — plano Free (Docker)
+# ESTE ARQUIVO VAI NA RAIZ DO *SEU* REPO (o que o Render conecta).
+# Não aponte para o repo upstream: ele não tem Dockerfile.
+# ATENÇÃO: no plano free o serviço dorme após ~15 min sem tráfego e o disco é
+# efêmero. Serve bem como proxy /v1, mas NÃO é ideal para as sessões de
+# navegador (/admin/code), que além disso são local-only no FCC original
+# (ver README-DEPLOY-PTBR.md). Para sessões no navegador, a opção é Fly.io
+# (paga, cerca de US$ 7/mês) ou Oracle Always Free, ambas via túnel.
+services:
+  - type: web
+    name: free-claude-code
+    runtime: docker
+    plan: free
+    dockerfilePath: ./Dockerfile
+    dockerContext: .
+    healthCheckPath: /health
+    envVars:
+      - key: HOST
+        value: 0.0.0.0
+      # Render injeta PORT automaticamente; o FCC lê PORT do ambiente.
+      - key: FCC_OPEN_BROWSER
+        value: "false"
+      - key: MODEL
+        value: nvidia_nim/nvidia/nemotron-3-ultra-550b-a55b
+      # Protege o proxy /v1 com bearer token. Troque o valor no painel do Render.
+      - key: PROXY_AUTH_ENABLED
+        value: "true"
+      - key: ANTHROPIC_AUTH_TOKEN
+        sync: false
+      # Chave free da NVIDIA NIM (criar em build.nvidia.com/settings/api-keys).
+      - key: NVIDIA_NIM_API_KEY
+        sync: false
